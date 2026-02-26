@@ -2,19 +2,25 @@ package main
 
 import (
 	"awesomeProject/Scanner"
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 	"time"
 )
-
 func main() {
-	urls := []string{
-		"https://google.com",
-		"https://github.com",
-		"https://stackoverflow.com",
-		"https://httpbin.org/status/404",
-		"https://invalid.website.that.does.not.exist",
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Проверка доступности сайтов")
+	fmt.Print("Введите URL (можно несколько через пробел): ")
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
+	urls := strings.Fields(input)
+	for i, url := range urls {
+		if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
+			urls[i] = "https://" + url
+		}
 	}
-	fmt.Println("=== Последовательная проверка ===")
+	fmt.Println("\n=== Последовательная проверка ===")
 	nowt := time.Now()
 	for _, url := range urls {
 		result := Scanner.Checksite(url)
